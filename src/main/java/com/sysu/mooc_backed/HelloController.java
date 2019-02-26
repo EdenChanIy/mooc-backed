@@ -10,10 +10,6 @@ import java.util.List;
 
 @RestController
 public class HelloController {
-
-    @Autowired
-    private UserMapper userMapper;
-
     @RequestMapping
     public String hello(){
         return "Hello Spring Boot!^_^";
