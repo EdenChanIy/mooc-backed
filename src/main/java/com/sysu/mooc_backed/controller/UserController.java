@@ -1,5 +1,7 @@
 package com.sysu.mooc_backed.controller;
 
+import com.sysu.mooc_backed.common.utils.Result;
+import com.sysu.mooc_backed.common.utils.StringUtils;
 import com.sysu.mooc_backed.entity.User;
 import com.sysu.mooc_backed.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -10,6 +12,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,13 +29,13 @@ public class UserController {
     }
 
     @RequestMapping("/user/findList")
-    public List<User> findList(){
-        return userService.findList();
+    public Result findList(){
+        return Result.success(userService.findList());
     }
 
     @RequestMapping("user/findUserByName")
-    public User findListById(String name){
-        return userService.findUserByName(name);
+    public Result findListById(String name){
+        return Result.success(userService.findUserByName(name));
     }
 
     @RequestMapping("user/add")
@@ -51,30 +54,37 @@ public class UserController {
         return "delete successfully!";
     }
 
-    @RequestMapping("user/login")
-    public String doLogin(@RequestParam("name") String name, @RequestParam("password") String password){
+    @RequestMapping(value = "user/login", method = RequestMethod.POST)
+    public Result doLogin(@RequestParam("name") String name, @RequestParam("password") String password){
         Subject currentUser = SecurityUtils.getSubject();
 
         UsernamePasswordToken token = new UsernamePasswordToken(name, password);
+
+        if(StringUtils.isEmpty(name)){
+            return Result.error("缺少name");
+        }
+        if(StringUtils.isEmpty(password)){
+            return Result.error("缺少password");
+        }
 
         try{
             currentUser.login(token);
             if(currentUser.isAuthenticated()){
                 System.out.println("登陆成功");
-                return "success";
+                return Result.success("success");
             }else{
                 System.out.println("登陆失败");
-                return "failure";
+                return Result.error("登陆失败");
             }
         }catch (UnknownAccountException e){
             System.out.println("账户不存在");
-            return "failure";
+            return Result.error("账户不存在");
         }catch (IncorrectCredentialsException e){
             System.out.println("密码不正确");
-            return "failure";
+            return Result.error("密码不正确");
         }catch (AuthenticationException e){
             System.out.println("其他错误");
-            return "failure";
+            return Result.error("其他错误");
         }
     }
 }
