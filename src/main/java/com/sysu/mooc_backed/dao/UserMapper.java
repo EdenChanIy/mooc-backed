@@ -13,7 +13,12 @@ public interface UserMapper {
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "name", column = "username"),
-            @Result(property = "password", column = "password")
+            @Result(property = "password", column = "password"),
+            @Result(property = "phone", column = "phone"),
+            @Result(property = "icon", column = "icon"),
+            @Result(property = "sex", column = "sex"),
+            @Result(property = "job", column = "job"),
+            @Result(property = "crateTime", column = "create_time")
     })
     List<User> findList();
 
