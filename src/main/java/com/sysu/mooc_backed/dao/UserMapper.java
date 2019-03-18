@@ -18,7 +18,7 @@ public interface UserMapper {
             @Result(property = "icon", column = "icon"),
             @Result(property = "sex", column = "sex"),
             @Result(property = "job", column = "job"),
-            @Result(property = "crateTime", column = "create_time")
+            @Result(property = "createTime", column = "create_time")
     })
     List<User> findList();
 
