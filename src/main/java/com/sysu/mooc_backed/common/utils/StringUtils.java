@@ -5,4 +5,5 @@ public class StringUtils {
     public static boolean isEmpty(final CharSequence cs){
         return null == cs || cs.length() == 0;
     }
+
 }
