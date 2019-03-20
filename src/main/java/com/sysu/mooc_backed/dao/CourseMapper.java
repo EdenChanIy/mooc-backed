@@ -1,6 +1,7 @@
 package com.sysu.mooc_backed.dao;
 
 import com.sysu.mooc_backed.entity.Course;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -54,5 +55,10 @@ public interface CourseMapper {
     @Select("SELECT COUNT(*) FROM course WHERE category2 = #{category2}")
     int countFindListByCategory2(int category2);
 
-
+    //根据兴趣列表获取最多5个推荐课程
+    @Select("<script> SELECT * FROM course WHERE category2 IN " +
+                " <foreach item='item' index='index' collection='type' open=" +
+                    "'(' separator=',' close=')'> #{item} </foreach> Limit 5 </script>"
+    )
+    List<Course> findRecommendListByInterests(@Param("type") List<Integer> interests);
 }

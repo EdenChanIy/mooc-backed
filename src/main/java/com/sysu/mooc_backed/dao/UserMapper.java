@@ -30,6 +30,10 @@ public interface UserMapper {
     })
     User findUserByName(String name);
 
+    //根据id获取用户信息
+    @Select("SELECT * FROM user WHERE id=#{id}")
+    User findUserById(int id);
+
     @Insert("INSERT INTO user(name, password) VALUES(#{name}, #{password})")
     void add(User user);
 
@@ -38,4 +42,8 @@ public interface UserMapper {
 
     @Delete("DELETE FROM user WHERE id=#{id}")
     void delete(int id);
+
+    //通过用户Id获取用户的兴趣列表
+    @Select("SELECT interest_id FROM user_interest_rel WHERE user_id = #{userId}")
+    List<Integer> findInterestListByUserId(int userId);
 }

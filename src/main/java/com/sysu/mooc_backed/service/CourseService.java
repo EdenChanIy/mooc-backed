@@ -16,4 +16,7 @@ public interface CourseService {
 
     //Count根据二级分类获取课程
     int countFindListByCategory2(int category2);
+
+    //根据兴趣列表获取最多5个推荐课程
+    List<Course> findRecommendListByInterests(List<Integer> interests);
 }

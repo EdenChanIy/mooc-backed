@@ -4,6 +4,7 @@ import com.sysu.mooc_backed.common.utils.Result;
 import com.sysu.mooc_backed.common.utils.StringUtils;
 import com.sysu.mooc_backed.entity.Course;
 import com.sysu.mooc_backed.service.CourseService;
+import com.sysu.mooc_backed.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,18 +18,19 @@ import java.util.Map;
 public class CourseController {
 
     private final CourseService courseService;
+    private final UserService userService;
 
     @Autowired
-    public CourseController(CourseService courseService){
+    public CourseController(CourseService courseService, UserService userService){
         this.courseService = courseService;
+        this.userService = userService;
     }
 
     //2.1 获取课程分类及一级分类推荐课程
     @RequestMapping("/course/findListRecommend")
     public Result findListByCategory1(){
         try{
-            List<Integer> category1List = new ArrayList<>();
-            category1List = courseService.findCategory1List();
+            List<Integer> category1List = courseService.findCategory1List();
 
             List<Map> result = new ArrayList<>();
 
@@ -66,8 +68,22 @@ public class CourseController {
             e.printStackTrace();
             return Result.error("网络异常");
         }
+    }
 
+    //2.3 根据兴趣获取推荐课程
+    @RequestMapping("/course/findRecommendListByUserId")
+    public Result findRecommendListByUserId(String userId){
+        try{
+            if(StringUtils.isEmpty(userId)) return Result.error("缺少用户id");
+            int userIdInt = Integer.parseInt(userId);
 
+            if(null==userService.findUserById(userIdInt)) return Result.error("用户id不存在");
 
+            List<Integer> interests = userService.findInterestListByUserId(userIdInt);
+            return Result.success(courseService.findRecommendListByInterests(interests));
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
     }
 }

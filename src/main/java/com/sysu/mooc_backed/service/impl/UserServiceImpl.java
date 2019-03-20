@@ -28,6 +28,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserById(int id){
+        return userMapper.findUserById(id);
+    }
+
+    @Override
     public void addUser(User user){
         userMapper.add(user);
     }
@@ -40,5 +45,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(int id){
         userMapper.delete(id);
+    }
+
+    @Override
+    public List<Integer> findInterestListByUserId(int userId){
+        return userMapper.findInterestListByUserId(userId);
     }
 }

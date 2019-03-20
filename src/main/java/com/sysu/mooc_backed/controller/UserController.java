@@ -87,4 +87,15 @@ public class UserController {
             return Result.error("其他错误");
         }
     }
+
+//    @RequestMapping("/user/interest")
+//    public Result findInterest(String userId){
+//        try{
+//            int userIdInt = Integer.parseInt(userId);
+//            return Result.success(userService.findInterestListByUserId(userIdInt));
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return Result.error("网络异常");
+//        }
+//    }
 }

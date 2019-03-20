@@ -36,4 +36,9 @@ public class CourseServiceImpl implements CourseService {
     public int countFindListByCategory2(int category2){
         return courseMapper.countFindListByCategory2(category2);
     }
+
+    @Override
+    public List<Course> findRecommendListByInterests(List<Integer> interests){
+        return courseMapper.findRecommendListByInterests(interests);
+    }
 }
