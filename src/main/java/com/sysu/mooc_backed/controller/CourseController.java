@@ -2,11 +2,13 @@ package com.sysu.mooc_backed.controller;
 
 import com.sysu.mooc_backed.common.utils.Result;
 import com.sysu.mooc_backed.common.utils.StringUtils;
-import com.sysu.mooc_backed.entity.Course;
+import com.sysu.mooc_backed.entity.Collections;
+import com.sysu.mooc_backed.service.CollectionService;
 import com.sysu.mooc_backed.service.CourseService;
 import com.sysu.mooc_backed.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -19,11 +21,15 @@ public class CourseController {
 
     private final CourseService courseService;
     private final UserService userService;
+    private final CollectionService collectionService;
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService){
+    public CourseController(CourseService courseService,
+                                UserService userService,
+                                    CollectionService collectionService){
         this.courseService = courseService;
         this.userService = userService;
+        this.collectionService = collectionService;
     }
 
     //2.1 获取课程分类及一级分类推荐课程
@@ -81,6 +87,40 @@ public class CourseController {
 
             List<Integer> interests = userService.findInterestListByUserId(userIdInt);
             return Result.success(courseService.findRecommendListByInterests(interests));
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
+
+    //2.4 更新用户对某课程的收藏状态
+    @RequestMapping(value = "/course/updateCollectionStatus", method = RequestMethod.POST)
+    public Result updateCollectionStatus(String uid, String cid, String favorite){
+        try{
+            if(StringUtils.isEmpty(uid)) return Result.error("缺少用户uid");
+            if(StringUtils.isEmpty(cid)) return Result.error("缺少课程cid");
+            if(StringUtils.isEmpty(favorite)) return Result.error("缺少收藏状态favorite");
+
+            int uidInt = Integer.parseInt(uid);
+            int cidInt = Integer.parseInt(cid);
+            boolean fb = Boolean.getBoolean(favorite);
+
+            Collections collections = collectionService.findRecordByUserIdAndCourseId(uidInt, cidInt);
+            if(fb){
+                if(null== collections){
+                    collectionService.addCollectionByUserIdAndCourseId(uidInt, cidInt);
+                    return Result.success("收藏成功");
+                }else{
+                    return Result.success("已收藏，勿重复收藏");
+                }
+            }else{
+                if(null == collections){
+                    return Result.success("未收藏，无法取消");
+                }else{
+                    collectionService.deleteCollectionByUserIdAndCourseId(uidInt, cidInt);
+                    return Result.success("取消收藏成功");
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
             return Result.error("网络异常");

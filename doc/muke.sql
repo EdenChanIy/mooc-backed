@@ -35,10 +35,10 @@ CREATE TABLE `chapter` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for collection
+-- Table structure for collections
 -- ----------------------------
-DROP TABLE IF EXISTS `collection`;
-CREATE TABLE `collection` (
+DROP TABLE IF EXISTS `collections`;
+CREATE TABLE `collections` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户收藏课程关系表',
   `user_id` int(11) unsigned NOT NULL COMMENT '用户id',
   `course_id` int(11) unsigned NOT NULL COMMENT '课程id',
@@ -51,7 +51,7 @@ CREATE TABLE `collection` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户收藏课程关系表';
 
 -- ----------------------------
--- Records of collection
+-- Records of collections
 -- ----------------------------
 
 -- ----------------------------

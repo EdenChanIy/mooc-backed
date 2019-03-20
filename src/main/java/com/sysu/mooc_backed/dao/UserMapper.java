@@ -46,4 +46,5 @@ public interface UserMapper {
     //通过用户Id获取用户的兴趣列表
     @Select("SELECT interest_id FROM user_interest_rel WHERE user_id = #{userId}")
     List<Integer> findInterestListByUserId(int userId);
+
 }
