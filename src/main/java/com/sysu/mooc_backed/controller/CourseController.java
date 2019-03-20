@@ -2,12 +2,15 @@ package com.sysu.mooc_backed.controller;
 
 import com.sysu.mooc_backed.common.utils.Result;
 import com.sysu.mooc_backed.common.utils.StringUtils;
+import com.sysu.mooc_backed.entity.Course;
 import com.sysu.mooc_backed.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +23,30 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    //2.1 获取课程分类及一级分类推荐课程
+    @RequestMapping("/course/findListRecommend")
+    public Result findListByCategory1(){
+        try{
+            List<Integer> category1List = new ArrayList<>();
+            category1List = courseService.findCategory1List();
+
+            List<Map> result = new ArrayList<>();
+
+            for(int c: category1List){
+                Map<String, Object> category2Map = new HashMap<>();
+                category2Map.put("category1", c);
+                category2Map.put("category2", courseService.findListByCategory1(c));
+                result.add(category2Map);
+            }
+
+            return Result.success(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
+
+    //2.2 根据分类分页获取课程
     @RequestMapping("/course/findListByCategory2")
     public Result findListByCategory2(String category2, String page, String limit){
         try{

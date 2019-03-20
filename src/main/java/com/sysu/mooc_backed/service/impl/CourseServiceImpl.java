@@ -18,6 +18,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Integer> findCategory1List(){
+        return courseMapper.findCategory1List();
+    }
+
+    @Override
+    public List<Course> findListByCategory1(int category1){
+        return courseMapper.findListByCategory1(category1);
+    }
+
+    @Override
     public List<Course> findListByCategory2(int category2, int offset, int limit){
         return courseMapper.findListByCategory2(category2, offset, limit);
     }
