@@ -3,6 +3,9 @@ package com.sysu.mooc_backed.controller;
 import com.sysu.mooc_backed.common.utils.Result;
 import com.sysu.mooc_backed.common.utils.StringUtils;
 import com.sysu.mooc_backed.entity.Collections;
+import com.sysu.mooc_backed.entity.Course;
+import com.sysu.mooc_backed.entity.User;
+import com.sysu.mooc_backed.entity.UserAndCourse;
 import com.sysu.mooc_backed.service.CollectionService;
 import com.sysu.mooc_backed.service.CourseService;
 import com.sysu.mooc_backed.service.UserService;
@@ -121,6 +124,65 @@ public class CourseController {
                     return Result.success("取消收藏成功");
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
+
+    //2.5获取课程基本信息接口
+    @RequestMapping("/course/findCourse")
+    public Result findCourseByCidAndUid(String cid, String uid){
+        try{
+            if(StringUtils.isEmpty(cid)) return Result.error("缺少课程cid");
+
+
+            int cidInt = Integer.parseInt(cid);
+            Course c = courseService.findCourseById(cidInt);
+            if(null==c) return Result.error("课程不存在");
+            User u = userService.findUserById(c.getLector());
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("id", c.getId());
+            result.put("img", c.getImg());
+            result.put("name", c.getName());
+            result.put("subtitle", c.getSubtitle());
+            result.put("category1", c.getCategory1());
+            result.put("category2", c.getCategory2());
+            result.put("needToKnow", c.getNeedToKnow());
+            result.put("learningCount", c.getLearningCount());
+            result.put("rating", c.getRating());
+
+            Map<String, Object> lector = new HashMap<>();
+            if(null!=u){
+                lector.put("id", u.getId());
+                lector.put("name", u.getName());
+                lector.put("icon", u.getIcon());
+                lector.put("job", u.getJob());
+                result.put("lector", lector);
+            }
+
+            if(StringUtils.isEmpty(uid)){
+                result.put("favorite", false);
+            }else {
+                int uidInt = Integer.parseInt(uid);
+                UserAndCourse uc;
+                uc =courseService.findRelByUidAndCid(uidInt, cidInt);
+                if(null==uc){
+                    result.put("favorite", false);
+                }else {
+                    result.put("favorite", true);
+                    Map<String, Object> leavePosition = new HashMap<>();
+                    leavePosition.put("cid", uc.getCourseId());
+                    leavePosition.put("chapter", uc.getChapter());
+                    leavePosition.put("period", uc.getPeriod());
+                    leavePosition.put("time", uc.getTime());
+
+                    result.put("leavePosition", leavePosition);
+                }
+            }
+
+            return Result.success(result);
         }catch (Exception e){
             e.printStackTrace();
             return Result.error("网络异常");

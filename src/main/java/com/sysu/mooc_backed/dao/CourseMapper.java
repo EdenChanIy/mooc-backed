@@ -1,6 +1,7 @@
 package com.sysu.mooc_backed.dao;
 
 import com.sysu.mooc_backed.entity.Course;
+import com.sysu.mooc_backed.entity.UserAndCourse;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -61,4 +62,12 @@ public interface CourseMapper {
                     "'(' separator=',' close=')'> #{item} </foreach> Limit 5 </script>"
     )
     List<Course> findRecommendListByInterests(@Param("type") List<Integer> interests);
+
+    //根据课程id获取课程信息
+    @Select("SELECT * FROM course WHERE id = #{id}")
+    Course findCourseById(int id);
+
+    //根据课程id和用户id获取用户课程关系信息
+    @Select("SELECT * FROM user_course_rel WHERE user_id=#{0} AND course_id=#{1}")
+    UserAndCourse findRelByUidAndCid(int userId, int courseId);
 }

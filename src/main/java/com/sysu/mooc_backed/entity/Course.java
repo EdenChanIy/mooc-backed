@@ -1,5 +1,7 @@
 package com.sysu.mooc_backed.entity;
 
+import java.sql.Time;
+
 /**
  * 课程
  */
@@ -14,6 +16,7 @@ public class Course {
     private int category2;
     private String needToKnow;
     private int learningCount;
+    private Time totalTime;
 
     public int getId() {
         return id;
@@ -93,5 +96,13 @@ public class Course {
 
     public void setLearningCount(int learningCount) {
         this.learningCount = learningCount;
+    }
+
+    public Time getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(Time totalTime) {
+        this.totalTime = totalTime;
     }
 }

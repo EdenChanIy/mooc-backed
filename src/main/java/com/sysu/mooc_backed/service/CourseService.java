@@ -1,6 +1,7 @@
 package com.sysu.mooc_backed.service;
 
 import com.sysu.mooc_backed.entity.Course;
+import com.sysu.mooc_backed.entity.UserAndCourse;
 
 import java.util.List;
 
@@ -19,4 +20,10 @@ public interface CourseService {
 
     //根据兴趣列表获取最多5个推荐课程
     List<Course> findRecommendListByInterests(List<Integer> interests);
+
+    //根据课程id获取课程信息
+    Course findCourseById(int id);
+
+    //根据课程id和用户id获取用户课程关系信息
+    UserAndCourse findRelByUidAndCid(int userId, int courseId);
 }
