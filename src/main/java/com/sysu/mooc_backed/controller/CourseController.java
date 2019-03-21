@@ -103,7 +103,7 @@ public class CourseController {
 
             int uidInt = Integer.parseInt(uid);
             int cidInt = Integer.parseInt(cid);
-            boolean fb = Boolean.getBoolean(favorite);
+            boolean fb = Boolean.parseBoolean(favorite);
 
             Collections collections = collectionService.findRecordByUserIdAndCourseId(uidInt, cidInt);
             if(fb){
@@ -111,11 +111,11 @@ public class CourseController {
                     collectionService.addCollectionByUserIdAndCourseId(uidInt, cidInt);
                     return Result.success("收藏成功");
                 }else{
-                    return Result.success("已收藏，勿重复收藏");
+                    return Result.error("已收藏，勿重复收藏", 304);
                 }
             }else{
                 if(null == collections){
-                    return Result.success("未收藏，无法取消");
+                    return Result.error("未收藏，无法取消", 304);
                 }else{
                     collectionService.deleteCollectionByUserIdAndCourseId(uidInt, cidInt);
                     return Result.success("取消收藏成功");

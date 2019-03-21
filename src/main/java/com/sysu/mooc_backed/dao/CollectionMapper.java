@@ -20,7 +20,7 @@ public interface CollectionMapper {
 
     //根据用户id和课程id增加收藏记录
     @Insert(
-            "INSERT INTO collection(userId, course_id) VALUES(#{0}, #{1})"
+            "INSERT INTO collection(user_id, course_id) VALUES(#{0}, #{1})"
     )
     void addCollectionByUserIdAndCourseId(int userId, int courseId);
 
