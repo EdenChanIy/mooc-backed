@@ -1,8 +1,7 @@
 package com.sysu.mooc_backed.service.impl;
 
 import com.sysu.mooc_backed.dao.CourseMapper;
-import com.sysu.mooc_backed.entity.Course;
-import com.sysu.mooc_backed.entity.UserAndCourse;
+import com.sysu.mooc_backed.entity.*;
 import com.sysu.mooc_backed.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +50,25 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public UserAndCourse findRelByUidAndCid(int userId, int courseId){
         return courseMapper.findRelByUidAndCid(userId, courseId);
+    }
+
+    @Override
+    public List<Chapter> findChaptersByCid(int cid){
+        return courseMapper.findChaptersByCid(cid);
+    }
+
+    @Override
+    public List<Period> findPeriodsByCid(int cid){
+        return courseMapper.findPeriodsByCid(cid);
+    }
+
+    @Override
+    public List<Node> findNodesByPid(int pid){
+        return courseMapper.findNodesByPid(pid);
+    }
+
+    @Override
+    public UserAndPeriod findRelByUidAndPid(int userId, int periodId){
+        return courseMapper.findRelByUidAndPid(userId, periodId);
     }
 }

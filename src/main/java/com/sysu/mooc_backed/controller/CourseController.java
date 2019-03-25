@@ -2,10 +2,7 @@ package com.sysu.mooc_backed.controller;
 
 import com.sysu.mooc_backed.common.utils.Result;
 import com.sysu.mooc_backed.common.utils.StringUtils;
-import com.sysu.mooc_backed.entity.Collections;
-import com.sysu.mooc_backed.entity.Course;
-import com.sysu.mooc_backed.entity.User;
-import com.sysu.mooc_backed.entity.UserAndCourse;
+import com.sysu.mooc_backed.entity.*;
 import com.sysu.mooc_backed.service.CollectionService;
 import com.sysu.mooc_backed.service.CourseService;
 import com.sysu.mooc_backed.service.UserService;
@@ -183,6 +180,85 @@ public class CourseController {
             }
 
             return Result.success(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
+
+    //2.6获取课程章节信息接口
+    @RequestMapping("/course/findPeriod")
+    public Result findPeriodByCidAndUid(String cid, String uid){
+        try{
+            if(StringUtils.isEmpty(cid)) return Result.error("缺少课程cid");
+            Map<String, Object> result = new HashMap<>();
+
+            int cidInt1 = Integer.parseInt(cid);
+            Course c = courseService.findCourseById(cidInt1);
+
+            if(null==c) return Result.error("该课程id不存在");
+            result.put("intro", c.getNeedToKnow());
+
+            Map<String, Object> catalog = new HashMap<>();
+            List<Chapter> chs = courseService.findChaptersByCid(cidInt1);
+
+            if(null==chs){
+                catalog.put("chapters", "章节不存在");
+                result.put("catalog", catalog);
+                return Result.success(result);
+            }else{
+                List<Map<String, Object>> chapters = new ArrayList<>();
+                for(Chapter ch:chs){
+                    Map<String, Object> chapter = new HashMap<>();
+                    chapter.put("id", ch.getNo()); //章节序号
+                    chapter.put("title", ch.getName()); //章节标题
+                    chapter.put("intro", ch.getIntro()); //章节介绍
+
+                    List<Period> ps = courseService.findPeriodsByCid(ch.getId());
+                    if(null==ps){
+                        chapter.put("periods", "课时不存在");
+                        chapters.add(chapter);
+                    }else{
+                        List<Map<String, Object>> periods = new ArrayList<>();
+                        for(Period p:ps){
+                            Map<String, Object> period = new HashMap<>();
+                            period.put("id", p.getNo()); //课时序号
+                            period.put("title", p.getName()); //课时标题
+                            period.put("url", p.getUrl()); //视频链接
+                            period.put("duration", p.getDuration()); //视频时长
+
+                            if(StringUtils.isEmpty(uid)){
+                                period.put("leaveTime", "-1");
+                            }else{
+                                int uidInt = Integer.parseInt(uid);
+                                UserAndPeriod uap = courseService.findRelByUidAndPid(uidInt, p.getId());
+                                if(null==uap){
+                                    period.put("leaveTime", "-1");
+                                }else {
+                                    period.put("leaveTime", uap.getLeaveTime().toString());
+                                }
+                            }
+
+//                            period.put("leaveTime", "未实现"); //上次离开时间点
+
+                            List<Node> ns = courseService.findNodesByPid(p.getId());
+                            if(null==ns){
+                                period.put("nodes", "节点不存在");
+                                periods.add(period);
+                            }else{
+                                period.put("nodes", ns);
+                                periods.add(period);
+                            }
+                        }
+                        chapter.put("periods", periods);
+                        chapters.add(chapter);
+                    }
+
+                }
+                catalog.put("chapters", chapters);
+                result.put("catalog", catalog);
+                return Result.success(result);
+            }
         }catch (Exception e){
             e.printStackTrace();
             return Result.error("网络异常");

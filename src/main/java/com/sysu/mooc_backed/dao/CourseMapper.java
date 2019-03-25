@@ -1,7 +1,6 @@
 package com.sysu.mooc_backed.dao;
 
-import com.sysu.mooc_backed.entity.Course;
-import com.sysu.mooc_backed.entity.UserAndCourse;
+import com.sysu.mooc_backed.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -70,4 +69,28 @@ public interface CourseMapper {
     //根据课程id和用户id获取用户课程关系信息
     @Select("SELECT * FROM user_course_rel WHERE user_id=#{0} AND course_id=#{1}")
     UserAndCourse findRelByUidAndCid(int userId, int courseId);
+
+    //根据课程id获取章节信息
+    @Select("SELECT * FROM chapter WHERE cid = #{cid}")
+    @Result(property = "createTime", column = "create_time")
+    List<Chapter> findChaptersByCid(int cid);
+
+    //根据章节id获取课时信息
+    @Select("SELECT * FROM period WHERE cid = #{cid}")
+    @Result(property = "createTime", column = "create_time")
+    List<Period> findPeriodsByCid(int cid);
+
+    //根据课时id获取节点信息
+    @Select("SELECT * FROM node WHERE pid = #{pid}")
+    @Result(property = "createTime", column = "create_time")
+    List<Node> findNodesByPid(int pid);
+
+    //根据用户id和课时id获取用户课时关系信息
+    @Select("SELECT * FROM user_period_rel WHERE user_id=#{0} AND period_id=#{1}")
+    @Results({
+            @Result(property = "leaveTime", column = "leave_time"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time")
+    })
+    UserAndPeriod findRelByUidAndPid(int userId, int periodId);
 }

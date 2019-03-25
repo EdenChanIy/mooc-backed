@@ -1,7 +1,6 @@
 package com.sysu.mooc_backed.service;
 
-import com.sysu.mooc_backed.entity.Course;
-import com.sysu.mooc_backed.entity.UserAndCourse;
+import com.sysu.mooc_backed.entity.*;
 
 import java.util.List;
 
@@ -26,4 +25,16 @@ public interface CourseService {
 
     //根据课程id和用户id获取用户课程关系信息
     UserAndCourse findRelByUidAndCid(int userId, int courseId);
+
+    //根据课程id获取章节信息
+    List<Chapter> findChaptersByCid(int cid);
+
+    //根据章节id获取课时信息
+    List<Period> findPeriodsByCid(int cid);
+
+    //根据课时id获取节点信息
+    List<Node> findNodesByPid(int pid);
+
+    //根据用户id和课时id获取用户课时关系信息
+    UserAndPeriod findRelByUidAndPid(int userId, int periodId);
 }
