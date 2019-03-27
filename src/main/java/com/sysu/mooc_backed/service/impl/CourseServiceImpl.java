@@ -53,6 +53,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<UserAndCourse> findRelByUid3(int userId){
+        return courseMapper.findRelByUid3(userId);
+    }
+
+    @Override
     public List<Chapter> findChaptersByCid(int cid){
         return courseMapper.findChaptersByCid(cid);
     }

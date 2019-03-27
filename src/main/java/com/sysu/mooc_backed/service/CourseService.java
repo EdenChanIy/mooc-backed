@@ -26,6 +26,9 @@ public interface CourseService {
     //根据课程id和用户id获取用户课程关系信息
     UserAndCourse findRelByUidAndCid(int userId, int courseId);
 
+    //根据课程id和用户id获取近三个月用户课程关系信息
+    List<UserAndCourse> findRelByUid3(int userId);
+
     //根据课程id获取章节信息
     List<Chapter> findChaptersByCid(int cid);
 

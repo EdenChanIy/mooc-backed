@@ -303,4 +303,40 @@ public class CourseController {
             return Result.error("网络异常");
         }
     }
+
+    //2.8 根据用id获取用户最近学习的课程列表
+    @RequestMapping("/course/findCollectionsByUserId3")
+    public Result findCollectionsByUserId3(String userId){
+        try{
+            if(StringUtils.isEmpty(userId)) return Result.error("缺少用户id");
+            int userIdInt = Integer.parseInt(userId);
+            List<Object> result = new ArrayList<>();
+
+            List<UserAndCourse> uacs = courseService.findRelByUid3(userIdInt);
+            if(null==uacs){
+                return Result.success("最近三个月没有学习任何课程");
+            }else {
+                for(UserAndCourse uac:uacs){
+                    Map<String, Object> c = new HashMap<>();
+
+                    System.out.println(uac.getCourseId());
+
+                    Course course1 = courseService.findCourseById(uac.getCourseId());
+                    c.put("id", course1.getId());
+                    c.put("img", course1.getImg());
+                    c.put("name", course1.getName());
+                    c.put("subtitle", course1.getSubtitle());
+                    c.put("learningCount", course1.getLearningCount());
+                    c.put("rating", course1.getRating());
+                    c.put("leavePosition", uac);
+
+                    result.add(c);
+                }
+                return Result.success(result);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
 }

@@ -68,7 +68,23 @@ public interface CourseMapper {
 
     //根据课程id和用户id获取用户课程关系信息
     @Select("SELECT * FROM user_course_rel WHERE user_id=#{0} AND course_id=#{1}")
+    @Results({
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "courseId", column = "course_id")
+    })
     UserAndCourse findRelByUidAndCid(int userId, int courseId);
+
+    //根据课程id和用户id获取近三个月里的课程用户关系信息
+    @Select("SELECT * FROM user_course_rel WHERE user_id=#{0} AND DATE_SUB(CURDATE(), INTERVAL 3 month) <= date(update_time)")
+    @Results({
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "courseId", column = "course_id")
+    })
+    List<UserAndCourse> findRelByUid3(int userId);
 
     //根据课程id获取章节信息
     @Select("SELECT * FROM chapter WHERE cid = #{cid}")
