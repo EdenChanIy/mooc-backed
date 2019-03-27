@@ -6,6 +6,8 @@ import com.sysu.mooc_backed.service.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author: EdenChanIy
  * @Date: 2019/3/21 0:51
@@ -32,5 +34,10 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public void deleteCollectionByUserIdAndCourseId(int userId, int courseId){
         collectionMapper.deleteCollectionByUserIdAndCourseId(userId, courseId);
+    }
+
+    @Override
+    public List<Integer> findRecordsByUserId(int userId){
+        return collectionMapper.findRecordsByUserId(userId);
     }
 }

@@ -264,4 +264,43 @@ public class CourseController {
             return Result.error("网络异常");
         }
     }
+
+    //2.7 根据用户id获取用户收藏的课程
+    @RequestMapping("/course/findCollectionsByUserId")
+    public Result findCollectionsByUserId(String userId){
+        try{
+            if(StringUtils.isEmpty(userId)) return Result.error("缺少用户id");
+            int userIdInt = Integer.parseInt(userId);
+            List<Object> result = new ArrayList<>();
+
+            List<Integer> courses = collectionService.findRecordsByUserId(userIdInt);
+            if(null==courses){
+                return Result.success("没有收藏任何课程");
+            }else {
+                for(int course:courses){
+                    Map<String, Object> c = new HashMap<>();
+                    Course course1 = courseService.findCourseById(course);
+                    c.put("id", course1.getId());
+                    c.put("img", course1.getImg());
+                    c.put("name", course1.getName());
+                    c.put("subtitle", course1.getSubtitle());
+                    c.put("learningCount", course1.getLearningCount());
+                    c.put("rating", course1.getRating());
+
+                    UserAndCourse uac = courseService.findRelByUidAndCid(userIdInt, course);
+                    if(null==uac){
+                        c.put("leavePosition", "null");
+                    }else {
+                        c.put("leavePosition", uac);
+                    }
+
+                    result.add(c);
+                }
+                return Result.success(result);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
 }

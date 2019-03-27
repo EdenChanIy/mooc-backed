@@ -3,8 +3,11 @@ package com.sysu.mooc_backed.dao;
 import com.sysu.mooc_backed.entity.Collections;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @Author: EdenChanIy
@@ -29,4 +32,10 @@ public interface CollectionMapper {
             "DELETE FROM collection WHERE user_id=#{0} AND course_id=#{1}"
     )
     void deleteCollectionByUserIdAndCourseId(int userId, int courseId);
+
+    //根据用户id获取收藏课程列表
+    @Select(
+            "SELECT course_id FROM collection WHERE user_id = #{userId}"
+    )
+    List<Integer> findRecordsByUserId(int userId);
 }
