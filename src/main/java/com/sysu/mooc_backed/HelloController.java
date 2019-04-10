@@ -12,6 +12,6 @@ import java.util.List;
 public class HelloController {
     @RequestMapping
     public String hello(){
-        return "Hello Spring Boot!^_^";
+        return "欢迎来到超视慕课平台!^_^";
     }
 }
