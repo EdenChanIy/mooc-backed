@@ -31,8 +31,8 @@ public interface DiscussionMapper {
     })
     Discussion findDiscussionById(int id);
 
-    //根据课时id获取该课时下的讨论列表
-    @Select("SELECT * FROM discussion WHERE pid = #{pid}")
+    //根据课时id分页获取该课时下的讨论列表
+    @Select("SELECT * FROM discussion WHERE pid = #{0} LIMIT #{1},#{2}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "title", column = "title"),
@@ -42,13 +42,14 @@ public interface DiscussionMapper {
             @Result(property = "authorId", column = "author_id"),
             @Result(property = "pid", column = "pid"),
             @Result(property = "time", column = "time"),
-            @Result(property = "createTime", column = "create_time")
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time")
     })
-    List<Discussion> findListByPId(int pid);
+    List<Discussion> findListByPId(int pid, int offset, int limit);
 
     //根据课时id获取该课时下的讨论数
     @Select("SELECT COUNT(*) FROM discussion WHERE pid = #{pid}")
     int findListCountByPid(int pid);
 
-    
+//    @Select("SELECT * FROM discussion, user_discussion_rel WHERE ")
 }

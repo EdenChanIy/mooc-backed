@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface UserMapper {
@@ -47,4 +48,7 @@ public interface UserMapper {
     @Select("SELECT interest_id FROM user_interest_rel WHERE user_id = #{userId}")
     List<Integer> findInterestListByUserId(int userId);
 
+    //获取用户id，头像，姓名三个信息
+    @Select("SELECT id, icon, name FROM user WHERE id = #{id}")
+    Map<String, Object> findAuthorInfoById(int id);
 }

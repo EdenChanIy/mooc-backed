@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CourseMapper {
@@ -109,4 +110,10 @@ public interface CourseMapper {
             @Result(property = "updateTime", column = "update_time")
     })
     UserAndPeriod findRelByUidAndPid(int userId, int periodId);
+
+    //根据讨论id获取该讨论对应的课程、章节、课时基本信息
+    @Select("SELECT course.id as cid, course.name as courseName, chapter.no as chapter, period.no as pid, " +
+            "period.name as periodName, discussion.time as time FROM course, chapter, period, discussion " +
+            "WHERE discussion.id = #{id} AND period.id = discussion.pid AND chapter.id = period.cid AND course.id = chapter.cid")
+    Map<String, Object> findInfoByDiscussionId(int id);
 }

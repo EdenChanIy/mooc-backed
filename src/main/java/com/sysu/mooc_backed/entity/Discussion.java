@@ -18,6 +18,7 @@ public class Discussion {
     private int pid; //该讨论对应课时id
     private Time time; //讨论对应时间节点
     private Date createTime; //讨论创建时间
+    private Date updateTime; //讨论最后更新时间
 
     public int getId() {
         return id;
@@ -89,5 +90,13 @@ public class Discussion {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

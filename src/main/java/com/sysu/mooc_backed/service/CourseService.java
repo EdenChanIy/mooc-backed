@@ -3,6 +3,7 @@ package com.sysu.mooc_backed.service;
 import com.sysu.mooc_backed.entity.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CourseService {
     //获取一级分类id列表
@@ -40,4 +41,7 @@ public interface CourseService {
 
     //根据用户id和课时id获取用户课时关系信息
     UserAndPeriod findRelByUidAndPid(int userId, int periodId);
+
+    //
+    Map<String, Object> findInfoByDiscussionId(int id);
 }
