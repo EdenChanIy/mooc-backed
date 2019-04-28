@@ -1,5 +1,6 @@
 package com.sysu.mooc_backed.service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,5 +9,7 @@ import java.util.Map;
  */
 public interface DiscussionService {
     //根据课时id获取讨论列表
-    Map<String, Object> findListByPid(int pid, int offset, int limit);
+    List<Object> findListByPid(int pid, int offset, int limit);
+    //根据课时id获取讨论列表COUNT
+    int findListCountByPid(int pid);
 }

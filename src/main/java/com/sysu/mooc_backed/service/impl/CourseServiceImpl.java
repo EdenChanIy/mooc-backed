@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-    private CourseMapper courseMapper;
+    private final CourseMapper courseMapper;
 
     @Autowired
     public CourseServiceImpl(CourseMapper courseMapper){

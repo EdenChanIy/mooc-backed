@@ -32,7 +32,7 @@ public interface DiscussionMapper {
     Discussion findDiscussionById(int id);
 
     //根据课时id分页获取该课时下的讨论列表
-    @Select("SELECT * FROM discussion WHERE pid = #{0} LIMIT #{1},#{2}")
+    @Select("SELECT * FROM discussion WHERE pid = #{0} ORDER BY update_time DESC LIMIT #{1},#{2}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "title", column = "title"),
@@ -51,5 +51,4 @@ public interface DiscussionMapper {
     @Select("SELECT COUNT(*) FROM discussion WHERE pid = #{pid}")
     int findListCountByPid(int pid);
 
-//    @Select("SELECT * FROM discussion, user_discussion_rel WHERE ")
 }
