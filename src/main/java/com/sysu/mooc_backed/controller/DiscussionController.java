@@ -44,4 +44,31 @@ public class DiscussionController {
             return Result.error("网络异常");
         }
     }
+
+    //3.2/3.3 根据用户id和课程id查看该课程下该用户的讨论列表，并通过type选择是自己发起的讨论，还是关注的讨论
+    @RequestMapping("discussion/findListByUidAndCid")
+    public Result findListByUidAndCid(String uid, String cid, String type){
+        try{
+            if(StringUtils.isEmpty(uid)) return Result.error("缺少用户id");
+            int uidInt = Integer.parseInt(uid);
+            int cidInt = 0;
+            if(!StringUtils.isEmpty(cid)) cidInt = Integer.parseInt(cid);
+            int typeInt = 0;
+            if(!StringUtils.isEmpty(type)) typeInt = Integer.parseInt(type);
+
+            Map<String, Object> result = new HashMap<>();
+            if(typeInt==0){
+                result.put("type", "用户创建的讨论");
+                result.put("forum", discussionService.findListByUidAndCidWithA(uidInt, cidInt));
+            }
+            if(typeInt==1){
+                result.put("type", "用户关注的讨论");
+                result.put("forum", discussionService.findListByUidAndCidWithF(uidInt, cidInt));
+            }
+            return Result.success(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
 }

@@ -62,4 +62,56 @@ public class DiscussionServiceImpl implements DiscussionService {
     public int findListCountByPid(int pid){
         return discussionMapper.findListCountByPid(pid);
     }
+
+    @Override
+    public List<Object> findListByUidAndCidWithA(int uid, int cid){
+        List<Object> result = new ArrayList<>();
+        List<Discussion> dlist = discussionMapper.findListByUidAndCidWithA(uid, cid);
+        if(null!=dlist){
+            for(Discussion l:dlist){
+                Map<String, Object> temp = new HashMap<>();
+                temp.put("id", l.getId());
+                temp.put("title", l.getTitle());
+                temp.put("createTime", l.getCreateTime());
+                temp.put("updateTime", l.getUpdateTime());
+                temp.put("replyCount", l.getReplyCount());
+                temp.put("pageViews", l.getView());
+                temp.put("likeCount", l.getLikeCount());
+                if(null!=userMapper.findAuthorInfoById(l.getAuthorId())){
+                    temp.put("creator", userMapper.findAuthorInfoById(l.getAuthorId()));
+                }
+                if(null!=courseMapper.findInfoByDiscussionId(l.getAuthorId())){
+                    temp.put("createPosition", courseMapper.findInfoByDiscussionId(l.getAuthorId()));
+                }
+                result.add(temp);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Object> findListByUidAndCidWithF(int uid, int cid){
+        List<Object> result = new ArrayList<>();
+        List<Discussion> dlist = discussionMapper.findListByUidAndCidWithF(uid, cid);
+        if(null!=dlist){
+            for(Discussion l:dlist){
+                Map<String, Object> temp = new HashMap<>();
+                temp.put("id", l.getId());
+                temp.put("title", l.getTitle());
+                temp.put("createTime", l.getCreateTime());
+                temp.put("updateTime", l.getUpdateTime());
+                temp.put("replyCount", l.getReplyCount());
+                temp.put("pageViews", l.getView());
+                temp.put("likeCount", l.getLikeCount());
+                if(null!=userMapper.findAuthorInfoById(l.getAuthorId())){
+                    temp.put("creator", userMapper.findAuthorInfoById(l.getAuthorId()));
+                }
+                if(null!=courseMapper.findInfoByDiscussionId(l.getAuthorId())){
+                    temp.put("createPosition", courseMapper.findInfoByDiscussionId(l.getAuthorId()));
+                }
+                result.add(temp);
+            }
+        }
+        return result;
+    }
 }

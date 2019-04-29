@@ -12,4 +12,8 @@ public interface DiscussionService {
     List<Object> findListByPid(int pid, int offset, int limit);
     //根据课时id获取讨论列表COUNT
     int findListCountByPid(int pid);
+    //根据作者id和课程id获取用户创建的讨论列表
+    List<Object> findListByUidAndCidWithA(int uid, int cid);
+    //根据用户id和课程id获取用户关注的讨论列表
+    List<Object> findListByUidAndCidWithF(int uid, int cid);
 }

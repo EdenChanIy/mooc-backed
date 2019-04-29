@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2019-04-23 22:06:29
+Date: 2019-04-29 16:06:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -97,21 +97,50 @@ INSERT INTO `course` VALUES ('12', 'test9', '', null, '0', '-1', '0', '3', '', '
 DROP TABLE IF EXISTS `discussion`;
 CREATE TABLE `discussion` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '讨论id',
-  `title` varchar(10) NOT NULL COMMENT '讨论标题（非空）',
+  `title` varchar(10) NOT NULL DEFAULT '' COMMENT '讨论标题（非空）',
   `reply_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '回复数',
   `like_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '点赞数',
   `view` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '浏览数',
   `author_id` int(11) unsigned NOT NULL COMMENT '讨论创建者id',
+  `cid` int(11) unsigned NOT NULL COMMENT '讨论所属的课程id',
   `pid` int(11) unsigned NOT NULL COMMENT '创建讨论的课时id',
   `time` time NOT NULL DEFAULT '00:00:00' COMMENT '建立讨论的时间节点',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   KEY `discussion_ibfk_1` (`author_id`),
-  CONSTRAINT `discussion_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='讨论';
+  KEY `discussion_ibfk_2` (`cid`),
+  KEY `discussion_ibfk_3` (`pid`),
+  CONSTRAINT `discussion_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `discussion_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `course` (`id`),
+  CONSTRAINT `discussion_ibfk_3` FOREIGN KEY (`pid`) REFERENCES `period` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='讨论主题基本信息表';
 
 -- ----------------------------
 -- Records of discussion
+-- ----------------------------
+INSERT INTO `discussion` VALUES ('1', '讨论1', '0', '0', '0', '1', '1', '1', '00:12:00', '2019-04-24 17:16:16', '2019-04-27 17:46:02');
+INSERT INTO `discussion` VALUES ('2', '讨论2', '0', '0', '0', '1', '1', '1', '00:00:00', '2019-04-27 17:46:55', '2019-04-27 17:46:55');
+INSERT INTO `discussion` VALUES ('3', '讨论3', '0', '0', '0', '1', '1', '2', '00:00:00', '2019-04-27 17:47:08', '2019-04-27 17:47:08');
+INSERT INTO `discussion` VALUES ('4', '讨论4', '0', '0', '0', '2', '1', '1', '00:00:00', '2019-04-29 15:34:54', '2019-04-29 15:34:54');
+INSERT INTO `discussion` VALUES ('5', '讨论5', '0', '0', '0', '1', '2', '4', '00:00:00', '2019-04-29 15:43:15', '2019-04-29 15:43:15');
+
+-- ----------------------------
+-- Table structure for discussion_item
+-- ----------------------------
+DROP TABLE IF EXISTS `discussion_item`;
+CREATE TABLE `discussion_item` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '具体讨论id',
+  `discussion_id` int(11) unsigned NOT NULL COMMENT '对应讨论主题id',
+  `parent_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '父级讨论id；为0时表示为讨论主题内容，为n时表示回复楼层为n的回复',
+  `user_id` int(11) unsigned NOT NULL COMMENT '回复用户id',
+  `content` varchar(255) DEFAULT '' COMMENT '回帖主体内容',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '回复时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of discussion_item
 -- ----------------------------
 
 -- ----------------------------
@@ -230,12 +259,13 @@ CREATE TABLE `user` (
   `job` varchar(10) DEFAULT '' COMMENT '用户职业',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间（注册时间）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', null, '123', 'abc', '', '1', '', '2019-03-18 23:27:32');
+INSERT INTO `user` VALUES ('2', null, '123456', 'admin', '', '1', '', '2019-04-29 15:32:43');
 
 -- ----------------------------
 -- Table structure for user_course_rel
@@ -273,14 +303,20 @@ CREATE TABLE `user_discussion_rel` (
   `discussion_id` int(11) unsigned NOT NULL COMMENT '讨论id',
   `liked` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否喜欢;1为喜欢',
   `is_followed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否关注；1为关注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  `is_authored` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否为作者：1为是',
+  PRIMARY KEY (`id`),
+  KEY `user_discussion_rel_ibfk_1` (`user_id`),
+  KEY `user_discussion_rel_ibfk_2` (`discussion_id`),
+  CONSTRAINT `user_discussion_rel_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `user_discussion_rel_ibfk_2` FOREIGN KEY (`discussion_id`) REFERENCES `discussion` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_discussion_rel
 -- ----------------------------
-INSERT INTO `user_discussion_rel` VALUES ('1', '1', '1', '1', '0');
-INSERT INTO `user_discussion_rel` VALUES ('2', '2', '1', '0', '0');
+INSERT INTO `user_discussion_rel` VALUES ('1', '1', '1', '1', '0', '0');
+INSERT INTO `user_discussion_rel` VALUES ('2', '2', '1', '0', '0', '0');
+INSERT INTO `user_discussion_rel` VALUES ('3', '1', '2', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for user_interest_rel

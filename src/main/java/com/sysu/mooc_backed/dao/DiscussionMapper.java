@@ -1,6 +1,7 @@
 package com.sysu.mooc_backed.dao;
 
 import com.sysu.mooc_backed.entity.Discussion;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -51,4 +52,37 @@ public interface DiscussionMapper {
     @Select("SELECT COUNT(*) FROM discussion WHERE pid = #{pid}")
     int findListCountByPid(int pid);
 
+    //根据用户id和课程id获取用户创建的讨论列表
+    @Select("<script> SELECT * FROM discussion WHERE author_id = #{uid} <if test='cid!=0'> AND cid = #{cid} </if></script>")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "replyCount", column = "reply_count"),
+            @Result(property = "likeCount", column = "like_count"),
+            @Result(property = "view", column = "view"),
+            @Result(property = "authorId", column = "author_id"),
+            @Result(property = "pid", column = "pid"),
+            @Result(property = "time", column = "time"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time")
+    })
+    List<Discussion> findListByUidAndCidWithA(@Param("uid") int uid, @Param("cid") int cid);
+
+    //根据用户id和课程id获取用户关注的讨论列表
+    @Select("<script> SELECT * FROM discussion " +
+            "WHERE id IN (SELECT discussion_id FROM user_discussion_rel WHERE user_id = #{uid} AND is_followed = 1) " +
+            "<if test='cid!=0'> AND cid = #{cid} </if></script>")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "replyCount", column = "reply_count"),
+            @Result(property = "likeCount", column = "like_count"),
+            @Result(property = "view", column = "view"),
+            @Result(property = "authorId", column = "author_id"),
+            @Result(property = "pid", column = "pid"),
+            @Result(property = "time", column = "time"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time")
+    })
+    List<Discussion> findListByUidAndCidWithF(@Param("uid") int uid, @Param("cid") int cid);
 }
