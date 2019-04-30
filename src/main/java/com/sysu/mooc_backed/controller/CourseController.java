@@ -341,17 +341,17 @@ public class CourseController {
     }
 
     //test
-    @RequestMapping("/course/test")
-    public Result test(String id){
-        try{
-            if(StringUtils.isEmpty(id)) return Result.error("缺少id");
-            int idInt = Integer.parseInt(id);
-
-            Map<String, Object> result = courseService.findInfoByDiscussionId(idInt);
-            return Result.success(result);
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.error("网络异常");
-        }
-    }
+//    @RequestMapping("/course/test")
+//    public Result test(String id){
+//        try{
+//            if(StringUtils.isEmpty(id)) return Result.error("缺少id");
+//            int idInt = Integer.parseInt(id);
+//
+//            Map<String, Object> result = courseService.findInfoByDiscussionId(idInt);
+//            return Result.success(result);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return Result.error("网络异常");
+//        }
+//    }
 }

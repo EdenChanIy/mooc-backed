@@ -16,4 +16,8 @@ public interface DiscussionService {
     List<Object> findListByUidAndCidWithA(int uid, int cid);
     //根据用户id和课程id获取用户关注的讨论列表
     List<Object> findListByUidAndCidWithF(int uid, int cid);
+    //根据讨论id获取讨论主题内容，回复列表及相关信息
+    List<Object> findItemListById(int id);
+    //根据讨论id获取讨论相关信息
+    Map<String, Object> findDiscussionById(int id);
 }

@@ -71,4 +71,22 @@ public class DiscussionController {
             return Result.error("网络异常");
         }
     }
+
+    //3.4 根据讨论id获取讨论详情信息
+    @RequestMapping("discussion/findDiscussionById")
+    public Result findDiscussionById(String id){
+        try{
+            if(StringUtils.isEmpty(id)) return Result.error("缺少讨论id");
+            int idInt = Integer.parseInt(id);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("info", discussionService.findDiscussionById(idInt));
+            result.put("reply", discussionService.findItemListById(idInt));
+
+            return Result.success(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("网络异常");
+        }
+    }
 }

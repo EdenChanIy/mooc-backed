@@ -4,6 +4,7 @@ import com.sysu.mooc_backed.dao.CourseMapper;
 import com.sysu.mooc_backed.dao.DiscussionMapper;
 import com.sysu.mooc_backed.dao.UserMapper;
 import com.sysu.mooc_backed.entity.Discussion;
+import com.sysu.mooc_backed.entity.DiscussionItem;
 import com.sysu.mooc_backed.service.DiscussionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,6 +113,51 @@ public class DiscussionServiceImpl implements DiscussionService {
                 result.add(temp);
             }
         }
+        return result;
+    }
+
+    @Override
+    public List<Object> findItemListById(int id){
+        List<Object> result = new ArrayList<>();
+        List<DiscussionItem> itemList = discussionMapper.findItemListById(id);
+        if(null!=itemList){
+            for(DiscussionItem item:itemList){
+                Map<String, Object> temp = new HashMap<>();
+                temp.put("id", item.getId());
+                temp.put("date", item.getCreateTime());
+                temp.put("content", item.getContent());
+                if(item.getParentId()!=0){
+                    temp.put("replyName", userMapper.findAuthorInfoById(
+                            discussionMapper.findItemByPid(
+                                    item.getParentId()).getUserId()));
+                }
+                temp.put("replyer", userMapper.findAuthorInfoById(item.getUserId()));
+
+                result.add(temp);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> findDiscussionById(int id){
+        Map<String, Object> result = new HashMap<>();
+        Discussion discussion = discussionMapper.findDiscussionById(id);
+        result.put("id", discussion.getId());
+        result.put("title", discussion.getTitle());
+        result.put("createTime", discussion.getCreateTime());
+        result.put("updateTime", discussion.getUpdateTime());
+        result.put("replyCount", discussion.getReplyCount());
+        result.put("pageViews", discussion.getView());
+        result.put("likeCount", discussion.getLikeCount());
+        if(null!=userMapper.findAuthorInfoById(discussion.getAuthorId())){
+            result.put("creator", userMapper.findAuthorInfoById(discussion.getAuthorId()));
+        }
+        if(null!=courseMapper.findInfoByDiscussionId(discussion.getAuthorId())){
+            result.put("createPosition", courseMapper.findInfoByDiscussionId(discussion.getAuthorId()));
+        }
+
         return result;
     }
 }

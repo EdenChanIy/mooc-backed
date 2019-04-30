@@ -15,6 +15,7 @@ public class Discussion {
     private int likeCount; //讨论获赞数
     private int view; //浏览数
     private int authorId; //讨论发起者id
+    private int cid; //该讨论对应课程id
     private int pid; //该讨论对应课时id
     private Time time; //讨论对应时间节点
     private Date createTime; //讨论创建时间
@@ -66,6 +67,14 @@ public class Discussion {
 
     public void setAuthorId(int authorId) {
         this.authorId = authorId;
+    }
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
     }
 
     public int getPid() {

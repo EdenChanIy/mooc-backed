@@ -1,6 +1,7 @@
 package com.sysu.mooc_backed.dao;
 
 import com.sysu.mooc_backed.entity.Discussion;
+import com.sysu.mooc_backed.entity.DiscussionItem;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -26,9 +27,11 @@ public interface DiscussionMapper {
             @Result(property = "likeCount", column = "like_count"),
             @Result(property = "view", column = "view"),
             @Result(property = "authorId", column = "author_id"),
+            @Result(property = "cid", column = "cid"),
             @Result(property = "pid", column = "pid"),
             @Result(property = "time", column = "time"),
-            @Result(property = "createTime", column = "create_time")
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time")
     })
     Discussion findDiscussionById(int id);
 
@@ -85,4 +88,24 @@ public interface DiscussionMapper {
             @Result(property = "updateTime", column = "update_time")
     })
     List<Discussion> findListByUidAndCidWithF(@Param("uid") int uid, @Param("cid") int cid);
+
+    //根据讨论id获取讨论主题内容和回复列表
+    @Select("SELECT * FROM discussion_item WHERE discussion_id = #{id} ORDER BY create_time")
+    @Results({
+            @Result(property = "discussionId", column = "discussion_id"),
+            @Result(property = "parentId", column = "parent_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "createTime", column = "create_time")
+    })
+    List<DiscussionItem> findItemListById(int id);
+
+    //根据parentId获取被回复讨论内容
+    @Select("SELECT * FROM user_discussion_rel WHERE id = #{pid}")
+    @Results({
+            @Result(property = "discussionId", column = "discussion_id"),
+            @Result(property = "parentId", column = "parent_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "createTime", column = "create_time")
+    })
+    DiscussionItem findItemByPid(int pid);
 }
