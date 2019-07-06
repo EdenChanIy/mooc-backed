@@ -1,6 +1,7 @@
 package com.sysu.mooc_backed.controller;
 
 import com.sysu.mooc_backed.common.utils.Result;
+import com.sysu.mooc_backed.entity.Message;
 import com.sysu.mooc_backed.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +23,11 @@ public class MessageController {
     @RequestMapping("/message/findList")
     public Result findList(){
         return Result.success(messageService.findList());
+    }
+
+    @RequestMapping("/message/add")
+    public Result add(Message message){
+        messageService.add(message);
+        return Result.success("add successfully");
     }
 }

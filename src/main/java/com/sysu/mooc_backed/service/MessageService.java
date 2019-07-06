@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface MessageService {
     List<Message> findList();
+
+    void add(Message message);
 }

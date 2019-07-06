@@ -26,4 +26,9 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> findList(){
         return messageMapper.findList();
     }
+
+    @Override
+    public void add(Message message){
+        messageMapper.add(message);
+    }
 }
