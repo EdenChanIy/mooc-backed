@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public interface MessageMapper {
 
-    @Select("Select * from message")
+    @Select("SELECT * FROM message")
     List<Message> findList();
 
-    @Insert("INSERT INTO message(content) VALUES(#{content})")
-    void add(Message message);
+    @Insert("INSERT INTO message(content) VALUE(#{content})")
+    void add(String content);
 }

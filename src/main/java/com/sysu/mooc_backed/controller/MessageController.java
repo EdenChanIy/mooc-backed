@@ -26,8 +26,8 @@ public class MessageController {
     }
 
     @RequestMapping("/message/add")
-    public Result add(Message message){
-        messageService.add(message);
+    public Result add(String content){
+        messageService.add(content);
         return Result.success("add successfully");
     }
 }
