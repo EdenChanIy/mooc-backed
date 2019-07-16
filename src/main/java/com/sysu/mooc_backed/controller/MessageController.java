@@ -30,4 +30,10 @@ public class MessageController {
         messageService.add(content);
         return Result.success("add successfully");
     }
+
+    @RequestMapping("/messge/delete")
+    public Result delete(int id){
+        messageService.delete(id);
+        return Result.success("delete successfully");
+    }
 }

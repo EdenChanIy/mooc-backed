@@ -31,4 +31,9 @@ public class MessageServiceImpl implements MessageService {
     public void add(String message){
         messageMapper.add(message);
     }
+
+    @Override
+    public void delete(int id){
+        messageMapper.delete(id);
+    }
 }

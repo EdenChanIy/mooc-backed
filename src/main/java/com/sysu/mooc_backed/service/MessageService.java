@@ -12,4 +12,6 @@ public interface MessageService {
     List<Message> findList();
 
     void add(String message);
+
+    void delete(int id);
 }
